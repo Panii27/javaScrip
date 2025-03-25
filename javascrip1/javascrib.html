@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+         <title>Hewan Favorit</title>
+        <link rel="stylesheet" type="text/css" href="style.css">
+</head>
+<body>
+
+<div class="container">
+    <div class="box">
+        <h2> <img src="2.jpg" alt="Gambar Lingkaran" class="circle-img"><br>
+            Paniii<br>
+            235314002</h2>
+        <label>Nama : </label> 
+        <input type="text" id="nama" placeholder="Masukkan Nama"><br><br>
+        
+        <label>Jumlah :</label>
+        <input type="number" id="jumlah" placeholder="Jumlah" min="1"><br><br>
+        
+        <button id="okButton" onclick="generateInputs()">OK</button>
+    </div>
+        
+    <div id="pilihanContainer" class="box hidden">
+        <h3>Masukkan Pilihan</h3>
+        <div id="pilihanInputs"></div>
+        <button id="pilihanButton" onclick="generateSelection()">OK</button>
+    </div>
+        
+    <div id="hasilContainer" class="box hidden">
+        <h3>Pilih Pilihan Anda</h3>
+        <div id="hasil"></div>
+        <button id="hasilButton" onclick="lockCheckboxes()">OK</button>
+    </div>
+        
+    <div id="finalContainer" class="box hidden">
+        <p id="finalResult"></p>
+    </div>
+</div>
+
+<script>
+    function generateInputs() {
+        let nama = document.getElementById('nama');
+        let jumlah = document.getElementById('jumlah');
+        let pilihanInputs = document.getElementById('pilihanInputs');
+        let okButton = document.getElementById('okButton');
+        
+        if (!nama.value || !jumlah.value) {
+            alert("Masukkan input terlebih dahulu");
+            return;
+        }
+
+        // Mematikan input dan button setelah diklik  
+        nama.disabled = true;
+        jumlah.disabled = true;
+        okButton.disabled = true;
+        pilihanInputs.innerHTML = '';
+
+        // Membuat input sesuai jumlah yang dimasukkan  
+        for (let i = 1; i <= jumlah.value; i++) {
+            pilihanInputs.innerHTML += `
+                <label>Pilihan ${i}: </label>
+                <input type="text" id="pilihan${i}"><br><br>
+            `;
+        }
+
+        // Menampilkan div pilihanContainer   
+        document.getElementById('pilihanContainer').classList.remove('hidden');
+    }
+
+    function generateSelection() {
+        let jumlah = document.getElementById('jumlah').value;
+        let hasil = document.getElementById('hasil');
+        let pilihanInputs = document.querySelectorAll('#pilihanInputs input');
+        let pilihanButton = document.getElementById('pilihanButton');
+        
+        hasil.innerHTML = '';
+
+        // Loop untuk membuat checkbox   
+        for (let i = 1; i <= jumlah; i++) {
+            let pilihan = document.getElementById(`pilihan${i}`).value;
+            hasil.innerHTML += `
+                <input type="checkbox" name="pilihan" value="${pilihan}"> ${pilihan}<br>
+            `;
+        }
+
+        // Mematikan input setelah pilihan dimasukkan   
+        pilihanInputs.forEach(input => input.disabled = true);
+        pilihanButton.disabled = true;
+        document.getElementById('hasilContainer').classList.remove('hidden');
+    }
+
+    function lockCheckboxes() {
+        let nama = document.getElementById('nama').value;
+        let jumlah = document.getElementById('jumlah').value;
+        let checkboxes = document.querySelectorAll('input[name="pilihan"]');
+        let selected = [];
+        let hasilButton = document.getElementById('hasilButton');
+
+        // Loop untuk mendapatkan checkbox yang dipilih  
+        checkboxes.forEach(cb => {
+            if (cb.checked) {
+                selected.push(cb.value);
+            }
+            cb.disabled = true;
+        });
+
+        // Menampilkan hasil akhir  
+        if (selected.length > 0) {
+            document.getElementById('finalResult').innerText = 
+                `Hallo, nama saya ${nama}, saya mempunyai ${jumlah} pilihan dan saya memilih ${selected.join(', ')}.`;
+            
+            hasilButton.disabled = true;
+            document.getElementById('finalContainer').classList.remove('hidden');
+        } else {
+            alert("Masukkan opsi pilihan");
+        }
+    }
+</script>
+
+</body>
+</html>
